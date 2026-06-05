@@ -1,0 +1,1072 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Radar de Monetizacion - Airsoft Arena</title>
+  <style>
+    :root {
+      --bg: #0f1110;
+      --panel: #171a18;
+      --panel-2: #20241f;
+      --ink: #f2f0e8;
+      --muted: #b6b1a2;
+      --faint: #777263;
+      --line: rgba(242, 240, 232, 0.15);
+      --red: #d93b37;
+      --amber: #d9a441;
+      --green: #67b26f;
+      --blue: #5c8fc9;
+      --steel: #97a2a6;
+      --radius: 8px;
+      --shadow: 0 18px 60px rgba(0, 0, 0, 0.28);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px) 0 0 / 42px 42px,
+        linear-gradient(0deg, rgba(255,255,255,0.025) 1px, transparent 1px) 0 0 / 42px 42px,
+        radial-gradient(circle at 78% 8%, rgba(217, 59, 55, 0.16), transparent 30%),
+        radial-gradient(circle at 10% 48%, rgba(92, 143, 201, 0.12), transparent 28%),
+        var(--bg);
+      font-family: "Aptos", "Avenir Next", "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 92vh;
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(340px, 0.95fr);
+      align-items: center;
+      gap: 48px;
+      padding: 56px 0 36px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      text-transform: uppercase;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 34px;
+      height: 2px;
+      background: var(--red);
+      display: inline-block;
+    }
+
+    h1,
+    h2,
+    h3,
+    .display {
+      font-family: "Avenir Next Condensed", "Bahnschrift", "DIN Condensed", "Arial Narrow", sans-serif;
+      letter-spacing: 0;
+      line-height: 0.95;
+      margin: 0;
+    }
+
+    h1 {
+      margin-top: 22px;
+      font-size: clamp(54px, 9vw, 126px);
+      text-transform: uppercase;
+      max-width: 900px;
+    }
+
+    .hero-copy {
+      margin-top: 28px;
+      max-width: 720px;
+      color: var(--muted);
+      font-size: clamp(17px, 1.65vw, 22px);
+    }
+
+    .hero-copy strong {
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 34px;
+    }
+
+    .pill {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--ink);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 800;
+      text-decoration: none;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .pill.primary {
+      background: var(--red);
+      border-color: var(--red);
+      color: white;
+    }
+
+    .radar-card {
+      position: relative;
+      padding: 24px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.075), rgba(255,255,255,0.035));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .radar-card::after {
+      content: "";
+      position: absolute;
+      inset: 16px;
+      border: 1px solid rgba(242, 240, 232, 0.08);
+      pointer-events: none;
+    }
+
+    .radar {
+      position: relative;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      border: 1px solid rgba(242, 240, 232, 0.25);
+      background:
+        radial-gradient(circle, transparent 0 23%, rgba(242,240,232,0.12) 24% 24.5%, transparent 25% 47%, rgba(242,240,232,0.12) 48% 48.5%, transparent 49% 72%, rgba(242,240,232,0.12) 73% 73.5%, transparent 74%),
+        conic-gradient(from -20deg, rgba(103,178,111,0.22), rgba(217,164,65,0.2), rgba(217,59,55,0.22), rgba(92,143,201,0.2), rgba(103,178,111,0.22));
+      display: grid;
+      place-items: center;
+    }
+
+    .radar::before,
+    .radar::after {
+      content: "";
+      position: absolute;
+      background: rgba(242, 240, 232, 0.18);
+    }
+
+    .radar::before {
+      width: 1px;
+      height: 100%;
+      left: 50%;
+      top: 0;
+    }
+
+    .radar::after {
+      height: 1px;
+      width: 100%;
+      top: 50%;
+      left: 0;
+    }
+
+    .radar-center {
+      position: relative;
+      z-index: 2;
+      width: 42%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: rgba(15, 17, 16, 0.86);
+      border: 1px solid rgba(242,240,232,0.24);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 16px;
+      font-weight: 900;
+      text-transform: uppercase;
+      font-size: clamp(13px, 1.4vw, 18px);
+    }
+
+    .signal {
+      position: absolute;
+      z-index: 3;
+      transform: translate(-50%, -50%);
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--red);
+      box-shadow: 0 0 0 7px rgba(217, 59, 55, 0.16);
+    }
+
+    .signal.s1 { top: 19%; left: 53%; background: var(--green); box-shadow: 0 0 0 7px rgba(103,178,111,0.16); }
+    .signal.s2 { top: 33%; left: 76%; background: var(--amber); box-shadow: 0 0 0 7px rgba(217,164,65,0.16); }
+    .signal.s3 { top: 67%; left: 71%; background: var(--red); }
+    .signal.s4 { top: 74%; left: 34%; background: var(--blue); box-shadow: 0 0 0 7px rgba(92,143,201,0.16); }
+    .signal.s5 { top: 40%; left: 24%; background: var(--steel); box-shadow: 0 0 0 7px rgba(151,162,166,0.16); }
+
+    .legend {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .legend span {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--red);
+      flex: 0 0 auto;
+    }
+
+    section {
+      padding: 72px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(220px, 0.48fr) minmax(0, 1fr);
+      gap: 32px;
+      align-items: end;
+      margin-bottom: 28px;
+    }
+
+    h2 {
+      font-size: clamp(36px, 5vw, 72px);
+      text-transform: uppercase;
+    }
+
+    .section-note {
+      color: var(--muted);
+      font-size: 18px;
+      margin: 0;
+      max-width: 760px;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .grid.cols-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .grid.cols-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .card {
+      background: rgba(23, 26, 24, 0.88);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px;
+      min-height: 100%;
+    }
+
+    .card h3 {
+      font-size: 27px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid rgba(242, 240, 232, 0.18);
+      background: rgba(255,255,255,0.05);
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 5px 9px;
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    .tag.green { color: #ccebd0; border-color: rgba(103,178,111,0.45); }
+    .tag.amber { color: #f0d29a; border-color: rgba(217,164,65,0.48); }
+    .tag.blue { color: #c9ddf5; border-color: rgba(92,143,201,0.5); }
+    .tag.red { color: #f4c4c1; border-color: rgba(217,59,55,0.5); }
+
+    .metric-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 26px;
+    }
+
+    .metric {
+      padding: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.04);
+      border-radius: var(--radius);
+    }
+
+    .metric .display {
+      font-size: clamp(34px, 4vw, 58px);
+      color: var(--ink);
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      font-weight: 800;
+    }
+
+    .matrix {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: rgba(23, 26, 24, 0.9);
+    }
+
+    .matrix-row {
+      display: grid;
+      grid-template-columns: 1.1fr 1.1fr 1.1fr;
+      border-top: 1px solid var(--line);
+    }
+
+    .matrix-row:first-child {
+      border-top: 0;
+    }
+
+    .matrix-cell {
+      padding: 18px;
+      border-left: 1px solid var(--line);
+    }
+
+    .matrix-cell:first-child {
+      border-left: 0;
+    }
+
+    .matrix-head {
+      background: rgba(255,255,255,0.055);
+      color: var(--ink);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 12px;
+    }
+
+    .matrix-cell strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--ink);
+    }
+
+    .matrix-cell p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .actor {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .actor::before {
+      content: attr(data-index);
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      font-family: "Avenir Next Condensed", "Bahnschrift", sans-serif;
+      font-size: 54px;
+      line-height: 1;
+      color: rgba(242,240,232,0.08);
+      font-weight: 900;
+    }
+
+    .opportunity-list {
+      list-style: none;
+      padding: 0;
+      margin: 14px 0 0;
+      color: var(--muted);
+    }
+
+    .opportunity-list li {
+      padding: 10px 0;
+      border-top: 1px solid rgba(242, 240, 232, 0.08);
+    }
+
+    .rank-table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: var(--radius);
+      background: rgba(23, 26, 24, 0.92);
+      border: 1px solid var(--line);
+    }
+
+    .rank-table th,
+    .rank-table td {
+      padding: 16px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .rank-table th {
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 12px;
+      background: rgba(255,255,255,0.055);
+    }
+
+    .rank-table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .bar {
+      width: 120px;
+      height: 8px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    .bar i {
+      display: block;
+      height: 100%;
+      background: var(--green);
+      border-radius: inherit;
+    }
+
+    .bar.effort i {
+      background: var(--amber);
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      counter-reset: phase;
+    }
+
+    .phase {
+      counter-increment: phase;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px;
+      background: rgba(23, 26, 24, 0.88);
+    }
+
+    .phase::before {
+      content: "0" counter(phase);
+      display: block;
+      color: var(--red);
+      font-family: "Avenir Next Condensed", "Bahnschrift", sans-serif;
+      font-size: 42px;
+      line-height: 1;
+      font-weight: 900;
+      margin-bottom: 12px;
+    }
+
+    .phase h3 {
+      font-size: 25px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .phase p {
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .quote {
+      border-left: 4px solid var(--red);
+      background: rgba(217, 59, 55, 0.08);
+      padding: 22px;
+      font-size: clamp(22px, 3vw, 36px);
+      line-height: 1.12;
+      font-family: "Avenir Next Condensed", "Bahnschrift", sans-serif;
+      text-transform: uppercase;
+    }
+
+    .footnote {
+      color: var(--faint);
+      font-size: 13px;
+      margin-top: 18px;
+    }
+
+    .source-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .source {
+      padding: 12px;
+      border: 1px solid rgba(242,240,232,0.1);
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12px;
+      overflow-wrap: anywhere;
+      background: rgba(0,0,0,0.16);
+    }
+
+    footer {
+      padding: 42px 0 64px;
+      color: var(--faint);
+      border-top: 1px solid var(--line);
+    }
+
+    @media (max-width: 900px) {
+      .hero,
+      .section-head,
+      .grid.cols-3,
+      .grid.cols-2,
+      .metric-row,
+      .timeline,
+      .source-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        min-height: auto;
+        padding-top: 36px;
+      }
+
+      .radar-card {
+        max-width: 560px;
+      }
+
+      .matrix {
+        overflow-x: auto;
+      }
+
+      .matrix-row {
+        min-width: 760px;
+      }
+
+      .rank-table {
+        min-width: 760px;
+      }
+
+      .table-wrap {
+        overflow-x: auto;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+        color: #111;
+      }
+
+      .hero {
+        min-height: auto;
+      }
+
+      .card,
+      .radar-card,
+      .matrix,
+      .phase,
+      .metric,
+      .rank-table,
+      .quote {
+        box-shadow: none;
+        background: #fff;
+        color: #111;
+        border-color: #d5d5d5;
+      }
+
+      .card p,
+      .matrix-cell p,
+      .phase p,
+      .section-note,
+      .hero-copy,
+      .opportunity-list,
+      .footnote,
+      footer {
+        color: #444;
+      }
+
+      section {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        padding: 34px 0;
+      }
+
+      .hero-actions {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <div>
+        <div class="eyebrow">Memo para socios - Junio 2026</div>
+        <h1>Radar de Monetizacion Airsoft Arena</h1>
+        <p class="hero-copy">
+          La plataforma ya tiene mas producto del que el modelo actual captura.
+          El foco no deberia ser subir mucho el fee por cabeza, sino convertir
+          Airsoft Arena en un <strong>sistema operativo comercial</strong> para campos,
+          organizadores, proveedores y jugadores.
+        </p>
+        <div class="hero-actions" aria-label="Navegacion del documento">
+          <a class="pill primary" href="#oportunidades">Ver oportunidades</a>
+          <a class="pill" href="#matriz">Matriz de madurez</a>
+          <a class="pill" href="#90-dias">Proximos 90 dias</a>
+        </div>
+      </div>
+
+      <aside class="radar-card" aria-label="Radar visual de lineas de ingreso">
+        <div class="radar">
+          <div class="signal s1" title="B2B campos"></div>
+          <div class="signal s2" title="Alquileres"></div>
+          <div class="signal s3" title="Proveedores"></div>
+          <div class="signal s4" title="Sponsors"></div>
+          <div class="signal s5" title="Jugadores"></div>
+          <div class="radar-center">Capas alrededor de la inscripcion</div>
+        </div>
+        <div class="legend">
+          <span><i class="dot" style="background: var(--green)"></i>B2B campos</span>
+          <span><i class="dot" style="background: var(--amber)"></i>Alquileres</span>
+          <span><i class="dot" style="background: var(--red)"></i>Proveedores</span>
+          <span><i class="dot" style="background: var(--blue)"></i>Sponsors</span>
+          <span><i class="dot" style="background: var(--steel)"></i>Jugadores</span>
+        </div>
+      </aside>
+    </header>
+
+    <section id="diagnostico">
+      <div class="section-head">
+        <h2>Diagnostico</h2>
+        <p class="section-note">
+          Cobrar solo por inscripcion deja el techo demasiado bajo. La buena noticia:
+          el codigo ya contiene varias piezas vendibles.
+        </p>
+      </div>
+
+      <div class="grid cols-3">
+        <article class="card">
+          <span class="tag red">Problema</span>
+          <h3>Fee por cabeza no escala solo</h3>
+          <p>
+            El fee de inscripcion sirve para cubrir parte de la operacion, pero
+            no alcanza como negocio principal para tres socios si el soporte,
+            desarrollo e infraestructura crecen.
+          </p>
+        </article>
+        <article class="card">
+          <span class="tag green">Ventaja</span>
+          <h3>Producto ya avanzado</h3>
+          <p>
+            Hay pagos, transferencias, check-in, alquileres, socios, campos compartidos,
+            comunidades, host, invitaciones, ranking, chat y analitica.
+          </p>
+        </article>
+        <article class="card">
+          <span class="tag amber">Decision</span>
+          <h3>Monetizar por capas</h3>
+          <p>
+            Mantener un fee bajo por inscripcion como adopcion, y capturar margen
+            en operacion B2B, alquileres, proveedores, sponsors y planes premium.
+          </p>
+        </article>
+      </div>
+
+      <div class="metric-row">
+        <div class="metric">
+          <div class="display">0.25</div>
+          <span>USD por inscripcion como precio fundador</span>
+        </div>
+        <div class="metric">
+          <div class="display">8-12%</div>
+          <span>Comision sugerida para proveedores</span>
+        </div>
+        <div class="metric">
+          <div class="display">90</div>
+          <span>Dias para validar paquetes comerciales</span>
+        </div>
+        <div class="metric">
+          <div class="display">7</div>
+          <span>Campos clave como universo inicial</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="existente">
+      <div class="section-head">
+        <h2>Ya Construido</h2>
+        <p class="section-note">
+          Este mapa evita vender como "futuro" algo que ya existe. La pregunta es
+          como empaquetarlo comercialmente.
+        </p>
+      </div>
+
+      <div class="grid cols-3">
+        <article class="card">
+          <span class="tag green">Core revenue</span>
+          <h3>Inscripciones y pagos</h3>
+          <p>Mercado Pago, transferencia, estados, callbacks, idempotencia y comision visible.</p>
+        </article>
+        <article class="card">
+          <span class="tag green">Operacion</span>
+          <h3>Admin de eventos</h3>
+          <p>Participantes, pagos, comprobantes, exportes, QR, codigo manual y check-in.</p>
+        </article>
+        <article class="card">
+          <span class="tag green">Equipamiento</span>
+          <h3>Alquileres internos</h3>
+          <p>Items, combos, stock, extras y reservas asociadas a pagos de eventos.</p>
+        </article>
+        <article class="card">
+          <span class="tag green">Recurring</span>
+          <h3>Socios por organizacion</h3>
+          <p>Planes mensuales, beneficios, checkout recurrente, cancelacion e historial.</p>
+        </article>
+        <article class="card">
+          <span class="tag green">Infra B2B</span>
+          <h3>Campos compartidos</h3>
+          <p>Accesos entre organizaciones, reservas de campo y calendario operativo.</p>
+        </article>
+        <article class="card">
+          <span class="tag green">Comunidad</span>
+          <h3>Social y retencion</h3>
+          <p>Equipos, amigos, grupos, anfitrion, invitaciones, chat, ranking, logros y notificaciones.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="matriz">
+      <div class="section-head">
+        <h2>Matriz</h2>
+        <p class="section-note">
+          Tres horizontes: cobrar mejor lo que ya existe, ajustar lo que esta cerca,
+          y construir las apuestas de mayor upside.
+        </p>
+      </div>
+
+      <div class="matrix" role="table" aria-label="Matriz de madurez de monetizacion">
+        <div class="matrix-row matrix-head" role="row">
+          <div class="matrix-cell" role="columnheader">Ya existe</div>
+          <div class="matrix-cell" role="columnheader">Requiere ajuste</div>
+          <div class="matrix-cell" role="columnheader">Futuro</div>
+        </div>
+        <div class="matrix-row" role="row">
+          <div class="matrix-cell" role="cell">
+            <strong>Plan B2B para campos</strong>
+            <p>Usar eventos, pagos, transferencias, check-in, reportes y soporte como paquete mensual.</p>
+          </div>
+          <div class="matrix-cell" role="cell">
+            <strong>Fee flexible por inscripcion</strong>
+            <p>Separar pricing fundador, volumen, campo estrategico y campo estandar.</p>
+          </div>
+          <div class="matrix-cell" role="cell">
+            <strong>Billing B2B formal</strong>
+            <p>Facturacion, limites por plan, contratos, minimo mensual y add-ons.</p>
+          </div>
+        </div>
+        <div class="matrix-row" role="row">
+          <div class="matrix-cell" role="cell">
+            <strong>Alquileres internos</strong>
+            <p>Ya se suman al flujo de inscripcion y stock.</p>
+          </div>
+          <div class="matrix-cell" role="cell">
+            <strong>Comision sobre alquiler</strong>
+            <p>Hoy la comision principal se calcula sobre inscripcion. Falta split por equipamiento.</p>
+          </div>
+          <div class="matrix-cell" role="cell">
+            <strong>Marketplace de proveedores</strong>
+            <p>Catalogo por proveedor, reputacion, disponibilidad, liquidaciones y comision 8-12%.</p>
+          </div>
+        </div>
+        <div class="matrix-row" role="row">
+          <div class="matrix-cell" role="cell">
+            <strong>Campos compartidos</strong>
+            <p>Base operativa para reservas entre organizaciones.</p>
+          </div>
+          <div class="matrix-cell" role="cell">
+            <strong>Monetizacion de reservas</strong>
+            <p>Fee por reserva confirmada, plan al campo owner o cargo por uso cross-org.</p>
+          </div>
+          <div class="matrix-cell" role="cell">
+            <strong>Red nacional de canchas</strong>
+            <p>Inventario, reputacion, calendario, demanda derivada y contratos entre partes.</p>
+          </div>
+        </div>
+        <div class="matrix-row" role="row">
+          <div class="matrix-cell" role="cell">
+            <strong>Social y analitica</strong>
+            <p>PostHog, ranking, equipos, chat, grupos, invitaciones y host.</p>
+          </div>
+          <div class="matrix-cell" role="cell">
+            <strong>Paquetes premium</strong>
+            <p>Campanas, prioridad de publicacion, reportes avanzados y comunidades privadas.</p>
+          </div>
+          <div class="matrix-cell" role="cell">
+            <strong>Sponsors segmentados</strong>
+            <p>Espacios destacados para tiendas, tecnicos, transporte, marcas y torneos.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="oportunidades">
+      <div class="section-head">
+        <h2>Por Actor</h2>
+        <p class="section-note">
+          La plataforma toca varios bolsillos. Cada actor paga por un valor distinto,
+          no por la misma inscripcion repetida.
+        </p>
+      </div>
+
+      <div class="grid cols-3">
+        <article class="card actor" data-index="01">
+          <span class="tag green">Campos</span>
+          <h3>Operacion y demanda</h3>
+          <ul class="opportunity-list">
+            <li>Plan mensual por publicar, cobrar, revisar pagos y hacer check-in.</li>
+            <li>Fee bajo por inscripcion confirmada como adopcion.</li>
+            <li>Reportes de ocupacion, reincidencia y conversion.</li>
+          </ul>
+        </article>
+        <article class="card actor" data-index="02">
+          <span class="tag blue">Organizadores</span>
+          <h3>Herramientas pro</h3>
+          <ul class="opportunity-list">
+            <li>Partidas privadas, preseleccion, anfitrion e invitaciones.</li>
+            <li>Grupos/comunidades reutilizables.</li>
+            <li>Campanas a jugadores y prioridad de visibilidad.</li>
+          </ul>
+        </article>
+        <article class="card actor" data-index="03">
+          <span class="tag amber">Proveedores</span>
+          <h3>Reservas con demanda</h3>
+          <ul class="opportunity-list">
+            <li>Marcadoras, proteccion, BBs, gas, baterias y accesorios.</li>
+            <li>Comision 8-12% por alquiler o venta confirmada.</li>
+            <li>Marketplace propio con calendario y stock.</li>
+          </ul>
+        </article>
+        <article class="card actor" data-index="04">
+          <span class="tag red">Sponsors</span>
+          <h3>Atencion segmentada</h3>
+          <ul class="opportunity-list">
+            <li>Ubicaciones destacadas en partidas, campos, ranking y equipos.</li>
+            <li>Promociones por zona, tipo de jugador o evento.</li>
+            <li>Medicion de clicks, visitas y conversiones.</li>
+          </ul>
+        </article>
+        <article class="card actor" data-index="05">
+          <span class="tag blue">Jugadores</span>
+          <h3>Beneficios reales</h3>
+          <ul class="opportunity-list">
+            <li>Prioridad, descuentos, credencial, historial y preventas.</li>
+            <li>Ranking/logros como retencion, no como cobro inicial.</li>
+            <li>Suscripcion solo si hay beneficios concretos.</li>
+          </ul>
+        </article>
+        <article class="card actor" data-index="06">
+          <span class="tag green">Airsoft Arena</span>
+          <h3>Rol de plataforma</h3>
+          <ul class="opportunity-list">
+            <li>Capturar valor por coordinar pagos, demanda, inventario y confianza.</li>
+            <li>No depender de un unico fee por cabeza.</li>
+            <li>Convertir features existentes en paquetes comerciales.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="ranking">
+      <div class="section-head">
+        <h2>Prioridad</h2>
+        <p class="section-note">
+          Ranking pragmatico: priorizar lo que puede generar aprendizaje comercial
+          sin quemar meses de desarrollo.
+        </p>
+      </div>
+
+      <div class="table-wrap">
+        <table class="rank-table">
+          <thead>
+            <tr>
+              <th>Oportunidad</th>
+              <th>Impacto</th>
+              <th>Esfuerzo</th>
+              <th>Por que ahora</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Plan B2B para campos</strong></td>
+              <td>Alto <div class="bar"><i style="width: 88%"></i></div></td>
+              <td>Bajo <div class="bar effort"><i style="width: 28%"></i></div></td>
+              <td>Ya existe mucha operacion. Se puede vender como paquete antes de construir billing formal.</td>
+            </tr>
+            <tr>
+              <td><strong>Comision sobre alquileres internos</strong></td>
+              <td>Alto <div class="bar"><i style="width: 82%"></i></div></td>
+              <td>Medio <div class="bar effort"><i style="width: 52%"></i></div></td>
+              <td>El ticket de alquiler suele ser mayor que el fee de inscripcion. Hay flujo y stock.</td>
+            </tr>
+            <tr>
+              <td><strong>Marketplace de proveedores externos</strong></td>
+              <td>Muy alto <div class="bar"><i style="width: 95%"></i></div></td>
+              <td>Alto <div class="bar effort"><i style="width: 78%"></i></div></td>
+              <td>Puede abrir una linea grande, pero requiere proveedor, liquidaciones y soporte.</td>
+            </tr>
+            <tr>
+              <td><strong>Reservas cross-org de campos</strong></td>
+              <td>Medio-alto <div class="bar"><i style="width: 72%"></i></div></td>
+              <td>Medio <div class="bar effort"><i style="width: 58%"></i></div></td>
+              <td>La base operativa existe. Falta transformar reserva en transaccion monetizable.</td>
+            </tr>
+            <tr>
+              <td><strong>Sponsors y comercios</strong></td>
+              <td>Medio <div class="bar"><i style="width: 64%"></i></div></td>
+              <td>Bajo-medio <div class="bar effort"><i style="width: 42%"></i></div></td>
+              <td>La app ya tiene modulos con atencion segmentada y analitica para medir.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="90-dias">
+      <div class="section-head">
+        <h2>90 Dias</h2>
+        <p class="section-note">
+          No hace falta resolver todo. Hace falta validar que alguien paga por
+          cada capa del negocio.
+        </p>
+      </div>
+
+      <div class="timeline">
+        <article class="phase">
+          <h3>Cerrar adopcion</h3>
+          <p>
+            Usar el campo top como caso tactico con fee fundador bajo. Pedir caso de exito,
+            logo, metricas agregadas y referencia comercial.
+          </p>
+        </article>
+        <article class="phase">
+          <h3>Paquetizar B2B</h3>
+          <p>
+            Convertir features existentes en 2 o 3 planes simples para campos:
+            Basico, Operativo y Pro. Cobro mensual mas fee bajo por volumen.
+          </p>
+        </article>
+        <article class="phase">
+          <h3>Medir alquileres</h3>
+          <p>
+            Medir alquileres por inscripcion, ticket promedio, stock agotado,
+            conversion y reclamos. Preparar el caso para proveedores externos.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section id="pricing">
+      <div class="section-head">
+        <h2>Paquetes</h2>
+        <p class="section-note">
+          Borrador para conversar. No es pricing final, es una forma de ordenar
+          lo que se vende y evitar negociar cada feature suelta.
+        </p>
+      </div>
+
+      <div class="grid cols-3">
+        <article class="card">
+          <span class="tag green">Founder</span>
+          <h3>Adopcion</h3>
+          <p>
+            USD 0.25 por inscripcion confirmada por 90 dias. Sin foco en margen.
+            Sirve para volumen, prueba social y aprendizaje.
+          </p>
+        </article>
+        <article class="card">
+          <span class="tag amber">Operativo</span>
+          <h3>Campo Pro</h3>
+          <p>
+            Mensualidad baja + fee por volumen. Incluye pagos, transferencia,
+            participantes, check-in, exportes y soporte.
+          </p>
+        </article>
+        <article class="card">
+          <span class="tag blue">Marketplace</span>
+          <h3>Proveedor</h3>
+          <p>
+            8-12% por reserva confirmada de alquiler/servicio, con catalogo,
+            stock, disponibilidad y exposicion dentro del flujo de inscripcion.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section id="cierre">
+      <div class="section-head">
+        <h2>Conclusion</h2>
+        <p class="section-note">
+          La tesis central para socios: no estamos construyendo solo un checkout
+          para partidas. Estamos juntando demanda, operacion y confianza.
+        </p>
+      </div>
+
+      <div class="quote">
+        El fee por cabeza puede abrir puertas. La rentabilidad deberia venir de
+        las capas que Airsoft Arena coordina alrededor de cada partida.
+      </div>
+
+      <div class="source-grid">
+        <div class="source">acda-back/services/pay/SplitCalculatorService.java - comision actual sobre inscripcion</div>
+        <div class="source">acda-back/controllers/rental/* - alquileres, items, combos y reservas</div>
+        <div class="source">acda-back/controllers/field/* - campos compartidos y reservas</div>
+        <div class="source">airsoft-arena-front-usuario/src/app/analytics/* - funnels y modulos trackeados</div>
+      </div>
+      <p class="footnote">
+        Nota: Sentencia Airsoft queda como caso tactico de adopcion. Este documento se enfoca
+        en el radar completo de monetizacion futura.
+      </p>
+    </section>
+  </main>
+
+  <footer class="page">
+    Airsoft Arena - Documento interno de estrategia comercial. Archivo HTML estatico, listo para compartir o imprimir.
+  </footer>
+</body>
+</html>
